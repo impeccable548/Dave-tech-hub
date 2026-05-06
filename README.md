@@ -1,5 +1,5 @@
 Dave Tech Hub 🖤🏆
-Premium Tech Landing Page — Next.js 14 + Sanity + Framer Motion
+Premium Tech Landing Page....Next.js 14 + Sanity + Framer Motion
 Stack
 Next.js 14 (App Router)
 Tailwind CSS with custom Gold palette
