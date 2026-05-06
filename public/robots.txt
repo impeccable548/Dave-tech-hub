@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
+
 Disallow: /admin
 Disallow: /admin/*
 
-Sitemap: https://your-domain.com/sitemap.xml
+Sitemap: https://dave-tech-37krgz26d-providence-s-projects-f4d4a02e.vercel.app/sitemap.xml
