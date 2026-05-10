@@ -518,18 +518,21 @@ export default function Page() {
               { icon:Phone, label:"Call Us", val:"07070440191", href:"tel:07070440191", accent:"#D4AF37" },
               { icon:MapPin, label:"Location", val:"Benin City, Nigeria", href:"#contact", accent:"#f87171" },
             ].map(({ icon: Ic, label, val, href, accent }) => {
-              const { ref, v } = useVisible();
+              const divRef = useRef<HTMLDivElement>(null);
+const aRef = useRef<HTMLAnchorElement>(null);
               const [h, setH] = useState(false);
               return (
-                <a key={label} ref={ref} href={href} target={href.startsWith("http")?"_blank":undefined} rel="noopener noreferrer"
-                  onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-                  style={{ display:"block", padding:"32px 24px", borderRadius:20, border:`1px solid ${h?"rgba(212,175,55,.35)":"rgba(255,255,255,.06)"}`, background:h?"rgba(212,175,55,.04)":"#0c0c0c", textAlign:"center", transition:"all .35s", transform:h?"translateY(-6px)":"none", textDecoration:"none", opacity:v?1:0 }}>
+      <div ref={ref} style={{opacity:v?1:0, transition:"opacity .5s"}}>
+<a key={label} href={href} target={href.startsWith("http")?"_blank":undefined} rel="noopener noreferrer"
+  onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
+  style={{ display:"block", padding:"32px 24px", borderRadius:20, border:`1px solid ${h?"rgba(212,175,55,.35)":"rgba(255,255,255,.06)"}`, background:h?"rgba(212,175,55,.04)":"#0c0c0c", textAlign:"center", transition:"all .35s", transform:h?"translateY(-6px)":"none", textDecoration:"none" }}>
                   <div style={{ width:52, height:52, borderRadius:14, background:`${accent}15`, border:`1px solid ${accent}30`, display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 16px", transition:"all .35s", boxShadow:h?`0 0 30px ${accent}40`:"none" }}>
                     <Ic size={22} color={accent}/>
                   </div>
                   <p style={{ fontSize:10, letterSpacing:".18em", color:"rgba(255,255,255,.3)", fontFamily:"'Space Mono',monospace", marginBottom:6 }}>{label.toUpperCase()}</p>
                   <p style={{ fontSize:13, color:"rgba(255,255,255,.7)", fontWeight:500 }}>{val}</p>
                 </a>
+ </div>
               );
             })}
           </div>
