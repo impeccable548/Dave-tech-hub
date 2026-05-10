@@ -301,12 +301,10 @@ export default function Page() {
         <div className="scan-line" style={{ zIndex:1 }} />
 
         {/* Corner brackets */}
-        {[[{t:"88px",l:"28px"},{points:"0,64 0,0 64,0"}],[{t:"88px",r:"28px"},{points:"64,64 64,0 0,0"}],[{b:"28px",l:"28px"},{points:"0,0 0,64 64,64"}],[{b:"28px",r:"28px"},{points:"64,0 64,64 0,64"}]].map(([pos,{points}], i) => (
-          <svg key={i} width="64" height="64" viewBox="0 0 64 64" style={{ position:"absolute", ...Object.fromEntries(Object.entries(pos as Record<string,string>).map(([k,v])=>[k,v])), opacity:.18, pointerEvents:"none", zIndex:1 }} fill="none">
-            <polyline points={points as string} stroke="#D4AF37" strokeWidth="1.5" fill="none"/>
-          </svg>
-        ))}
-
+        <svg width="64" height="64" viewBox="0 0 64 64" style={{position:"absolute",top:"88px",left:"28px",opacity:.18,pointerEvents:"none",zIndex:1}} fill="none"><polyline points="0,64 0,0 64,0" stroke="#D4AF37" strokeWidth="1.5" fill="none"/></svg>
+        <svg width="64" height="64" viewBox="0 0 64 64" style={{position:"absolute",top:"88px",right:"28px",opacity:.18,pointerEvents:"none",zIndex:1}} fill="none"><polyline points="64,64 64,0 0,0" stroke="#D4AF37" strokeWidth="1.5" fill="none"/></svg>
+        <svg width="64" height="64" viewBox="0 0 64 64" style={{position:"absolute",bottom:"28px",left:"28px",opacity:.18,pointerEvents:"none",zIndex:1}} fill="none"><polyline points="0,0 0,64 64,64" stroke="#D4AF37" strokeWidth="1.5" fill="none"/></svg>
+        <svg width="64" height="64" viewBox="0 0 64 64" style={{position:"absolute",bottom:"28px",right:"28px",opacity:.18,pointerEvents:"none",zIndex:1}} fill="none"><polyline points="64,0 64,64 0,64" stroke="#D4AF37" strokeWidth="1.5" fill="none"/></svg>
         {/* Content */}
         <div style={{ position:"relative", zIndex:2, textAlign:"center", maxWidth:960 }}>
           {/* Status */}
