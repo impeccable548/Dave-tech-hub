@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, ShoppingCart, Star, ArrowRight, Zap, Shield, Headphones, Smartphone, Monitor, Package, Phone, MapPin, Instagram, Twitter, Facebook, Menu, X, ChevronRight } from "lucide-react";
+import { supabase, type Product } from "@/lib/supabase";
 
 const WA = "https://wa.me/2347070440191";
 const MSG = (m: string) => `${WA}?text=${encodeURIComponent(m)}`;
@@ -37,7 +38,6 @@ const CONTACT_CARDS = [
   { icon:Phone, label:"Call Us", val:"07070440191", href:"tel:07070440191", accent:"#D4AF37" },
   { icon:MapPin, label:"Location", val:"Benin City, Nigeria", href:"#contact", accent:"#f87171" },
 ];
-
 // ── Reusable hook ──
 function useVisible(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
@@ -51,7 +51,7 @@ function useVisible(threshold = 0.1) {
 }
 
 // ── Product Card ──
-function PCard({ p, i }: { p: typeof PRODUCTS[0]; i: number }) {
+function PCard({ p, i }: { p: Product; i: number }) {
   const { ref, v } = useVisible();
   const [h, setH] = useState(false);
   const badgeColor =
@@ -78,15 +78,15 @@ function PCard({ p, i }: { p: typeof PRODUCTS[0]; i: number }) {
         <ShoppingCart size={44} strokeWidth={1} color={h ? "rgba(212,175,55,.6)" : "rgba(255,255,255,.12)"} style={{ transition:"all .4s", transform: h ? "scale(1.1)" : "scale(1)" }} />
       </div>
       <div style={{ padding:"24px 24px 28px" }}>
-        <p style={{ fontSize:10, letterSpacing:".22em", color:"rgba(212,175,55,.55)", fontFamily:"'Space Mono',monospace", marginBottom:8 }}>{p.cat.toUpperCase()}</p>
+        <p style={{ fontSize:10, letterSpacing:".22em", color:"rgba(212,175,55,.55)", fontFamily:"'Space Mono',monospace", marginBottom:8 }}>{(p.category || "").toUpperCase()}</p>
         <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontWeight:700, fontSize:21, marginBottom:10, color:"#f5f0e8", lineHeight:1.2 }}>{p.name}</h3>
-        <p style={{ fontSize:12.5, color:"rgba(255,255,255,.35)", lineHeight:1.7, marginBottom:16 }}>{p.desc}</p>
+        <p style={{ fontSize:12.5, color:"rgba(255,255,255,.35)", lineHeight:1.7, marginBottom:16 }}>{p.description}</p>
         <div style={{ display:"flex", gap:3, marginBottom:18 }}>
           {[...Array(5)].map((_,s) => <Star key={s} size={11} fill={s < p.stars ? "#D4AF37" : "transparent"} color={s < p.stars ? "#D4AF37" : "rgba(255,255,255,.15)"} />)}
         </div>
         <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:22 }}>
           <span style={{ fontFamily:"'Cormorant Garamond',serif", fontWeight:700, fontSize:26, color:"#D4AF37" }}>{p.price}</span>
-          {p.orig && <span style={{ fontSize:13, textDecoration:"line-through", color:"rgba(255,255,255,.22)" }}>{p.orig}</span>}
+          {p.original_price && <span style={{ fontSize:13, textDecoration:"line-through", color:"rgba(255,255,255,.22)" }}>{p.original_price}</span>}
         </div>
         <a href={MSG(`Hi Dave Tech Hub! I'm interested in the ${p.name} at ${p.price}. Please send more details.`)}
           target="_blank" rel="noopener noreferrer"
@@ -208,6 +208,8 @@ function AboutRight() {
 // ══════════════════════════════════════════════
 export default function Page() {
   const [scrollY, setScrollY] = useState(0);
+  const [liveProducts, setLiveProducts] = useState<Product[]>([]);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [menu, setMenu] = useState(false);
   const [mousePos, setMousePos] = useState({ x:50, y:50 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -222,6 +224,18 @@ export default function Page() {
     const fn = (e: MouseEvent) => setMousePos({ x:(e.clientX/window.innerWidth)*100, y:(e.clientY/window.innerHeight)*100 });
     window.addEventListener("mousemove", fn);
     return () => window.removeEventListener("mousemove", fn);
+  }, []);
+
+  useEffect(() => {
+    supabase
+      .from("products")
+      .select("*")
+      .eq("available", true)
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        setLiveProducts(data || []);
+        setProductsLoading(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -410,7 +424,8 @@ export default function Page() {
           </div>
         </div>
       </section>
-{/* ═══ SERVICES ═══ */}
+
+      {/* ═══ SERVICES ═══ */}
       <section id="services" style={{ padding:"120px 32px", background:"#080808", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", top:0, left:0, right:0, height:1, background:"linear-gradient(90deg,transparent,rgba(212,175,55,.2),transparent)" }}/>
         <div style={{ position:"absolute", bottom:0, left:0, right:0, height:1, background:"linear-gradient(90deg,transparent,rgba(212,175,55,.15),transparent)" }}/>
@@ -443,7 +458,14 @@ export default function Page() {
             <p style={{ marginTop:20, fontSize:14, color:"rgba(255,255,255,.35)", maxWidth:420, margin:"20px auto 0", lineHeight:1.75, fontWeight:300 }}>Every item is 100% genuine. Tap any card to order instantly on WhatsApp.</p>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(310px,1fr))", gap:24 }}>
-            {PRODUCTS.map((p,i) => <PCard key={p.id} p={p} i={i}/>)}
+            {productsLoading ? (
+              <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"60px 0", color:"rgba(255,255,255,.3)", fontSize:14 }}>Loading products...</div>
+            ) : liveProducts.length === 0 ? (
+              <div style={{ gridColumn:"1/-1", textAlign:"center", padding:"60px 0" }}>
+                <Package size={40} color="rgba(212,175,55,.2)" style={{ margin:"0 auto 14px", display:"block" }}/>
+                <p style={{ fontSize:14, color:"rgba(255,255,255,.3)" }}>Products coming soon. Check back shortly.</p>
+              </div>
+            ) : liveProducts.map((p, i) => <PCard key={p.id} p={p} i={i}/>)}
           </div>
           <div style={{ textAlign:"center", marginTop:64 }}>
             <a href={MSG("Hi! Please send me your full product catalogue.")} target="_blank" rel="noopener noreferrer"
