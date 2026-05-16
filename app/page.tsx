@@ -82,7 +82,7 @@ function PCard({ p, i }: { p: Product; i: number }) {
         <h3 style={{ fontFamily:"'Cormorant Garamond',serif", fontWeight:700, fontSize:21, marginBottom:10, color:"#f5f0e8", lineHeight:1.2 }}>{p.name}</h3>
         <p style={{ fontSize:12.5, color:"rgba(255,255,255,.35)", lineHeight:1.7, marginBottom:16 }}>{p.description}</p>
         <div style={{ display:"flex", gap:3, marginBottom:18 }}>
-          {[...Array(5)].map((_,s) => <Star key={s} size={11} fill={s < p.stars ? "#D4AF37" : "transparent"} color={s < p.stars ? "#D4AF37" : "rgba(255,255,255,.15)"} />)}
+          {[...Array(5)].map((_,s) => <Star key={s} size={11} fill="#D4AF37" color="#D4AF37" />)}
         </div>
         <div style={{ display:"flex", alignItems:"baseline", gap:10, marginBottom:22 }}>
           <span style={{ fontFamily:"'Cormorant Garamond',serif", fontWeight:700, fontSize:26, color:"#D4AF37" }}>{p.price}</span>
