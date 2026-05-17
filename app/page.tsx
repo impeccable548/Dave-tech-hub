@@ -75,7 +75,12 @@ function PCard({ p, i }: { p: Product; i: number }) {
       )}
       <div style={{ height:190, display:"flex", alignItems:"center", justifyContent:"center", background: h ? "linear-gradient(160deg,rgba(212,175,55,.08),transparent)" : "linear-gradient(160deg,rgba(255,255,255,.02),transparent)", borderBottom:"1px solid rgba(255,255,255,.05)", transition:"all .4s", position:"relative", overflow:"hidden" }}>
         <div style={{ position:"absolute", inset:0, background:`radial-gradient(circle at 50% 50%, rgba(212,175,55,${h ? .12 : .04}) 0%, transparent 70%)`, transition:"all .4s" }} />
-        <ShoppingCart size={44} strokeWidth={1} color={h ? "rgba(212,175,55,.6)" : "rgba(255,255,255,.12)"} style={{ transition:"all .4s", transform: h ? "scale(1.1)" : "scale(1)" }} />
+      {p.image_url ? (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img src={p.image_url} alt={p.name} style={{ width:"100%", height:"100%", objectFit:"cover", borderRadius:0 }} />
+) : (
+  <ShoppingCart size={44} strokeWidth={1} color={h ? "rgba(212,175,55,.6)" : "rgba(255,255,255,.12)"} style={{ transition:"all .4s", transform: h ? "scale(1.1)" : "scale(1)" }} />
+)}
       </div>
       <div style={{ padding:"24px 24px 28px" }}>
         <p style={{ fontSize:10, letterSpacing:".22em", color:"rgba(212,175,55,.55)", fontFamily:"'Space Mono',monospace", marginBottom:8 }}>{(p.category || "").toUpperCase()}</p>
